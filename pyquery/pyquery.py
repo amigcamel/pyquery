@@ -12,6 +12,10 @@ import inspect
 import types
 import sys
 
+from .logconf import Logger
+
+logger = Logger(__file__)
+
 
 PY3k = sys.version_info >= (3,)
 
@@ -257,6 +261,7 @@ class PyQuery(list):
             # select nodes
             if elements and selector is not no_default:
                 xpath = self._css_to_xpath(selector)
+                logger.debug('xpath: %s' % xpath)
                 results = []
                 for tag in elements:
                     results.extend(
