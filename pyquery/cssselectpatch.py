@@ -450,6 +450,22 @@ class JQueryTranslator(cssselect_xpath.HTMLTranslator):
         return xpath
 
     def xpath_matches_function(self, xpath, function):
+        """Matches all included selectors::
+
+            >>> from pyquery import PyQuery
+            >>> d = PyQuery('''
+                <div>
+                    <span id="boa"></span>
+                    <span id="foo"></span>
+                    <span class="aji"></span>
+                    <span class="bar"></span>
+                </div>
+            ''')
+            >>> d('span:matches("#boa" ".aji")')
+            [<span#boa>, <span.aji>]
+
+        ..
+        """
         xpathexpr_combined = None
         for arg in function.arguments:
             if arg.type != 'STRING':
