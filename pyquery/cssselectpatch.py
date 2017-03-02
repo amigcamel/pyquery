@@ -474,8 +474,9 @@ class JQueryTranslator(cssselect_xpath.HTMLTranslator):
                 )
             value = self.css_to_xpath(arg.value, prefix='').strip('*[]')
             xpathexpr = deepcopy(xpath).add_condition(value)
+            print(xpathexpr)
             if xpathexpr_combined:
-                xpathexpr_combined.join('|', xpathexpr)
+                xpathexpr_combined.join('|descendant-or-self::', xpathexpr)
             else:
                 xpathexpr_combined = xpathexpr
 
