@@ -4,6 +4,8 @@
 #
 # Distributed under the BSD license, see LICENSE.txt
 from __future__ import unicode_literals
+from copy import deepcopy
+
 from cssselect import xpath as cssselect_xpath
 from cssselect.xpath import ExpressionError
 
@@ -446,3 +448,19 @@ class JQueryTranslator(cssselect_xpath.HTMLTranslator):
         )
         xpath.add_post_condition(value)
         return xpath
+
+    def xpath_matches_function(self, xpath, function):
+        xpathexpr_combined = None
+        for arg in function.arguments:
+            if arg.type != 'STRING':
+                raise ExpressionError(
+                    ":matches() only accepts STRING (class or id) as parameters"
+                )
+            value = self.css_to_xpath(arg.value, prefix='').strip('*[]')
+            xpathexpr = deepcopy(xpath).add_condition(value)
+            if xpathexpr_combined:
+                xpathexpr_combined.join('|', xpathexpr)
+            else:
+                xpathexpr_combined = xpathexpr
+
+        return xpathexpr_combined
