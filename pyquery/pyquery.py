@@ -489,6 +489,23 @@ class PyQuery(list):
         return [e for e in self._traverse('getnext')]
 
     @with_camel_case_alias
+    def next_until(self, selector, filter_=None):
+        eles = []
+        for e in self:
+            next_ = e.getnext()
+            while next_ is not None:
+                if next_.cssselect(selector):
+                    break
+                if filter_:
+                    if next_.cssselect(filter_):
+                        eles.append(next_)
+                else:
+                    eles.append(next_)
+
+                next_ = next_.getnext()
+        return self._copy(eles, parent=self)
+
+    @with_camel_case_alias
     def next_all(self, selector=None):
         """
         >>> h = '<span><p class="hello">Hi</p><p>Bye</p><img scr=""/></span>'
